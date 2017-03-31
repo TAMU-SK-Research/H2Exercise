@@ -33,7 +33,7 @@ public class Admin extends Thread {
 			for (int i = 1; i < Integer.MAX_VALUE; i++) {
 				String sql = "UPDATE Registration " +
                 "SET age =" + i + "WHERE id in (1, 2)";
-				insertDumyRecords(sql);
+				H2Exercise.executeSql(conn, sql);
 				if (i % 10 == 0) {
 					H2Exercise.commit(conn);
 				}
@@ -69,12 +69,6 @@ public class Admin extends Thread {
 		stmt.executeUpdate(sql);
 		
 		H2Exercise.log("Created table in given REGISTRATION...");	
-	}
-	
-	void insertDumyRecords(String sql) throws Exception {
-		H2Exercise.log("Inserting dumy records into the REGISTRATION table...");
-		stmt.executeUpdate(sql);
-		H2Exercise.log("Inserted dumy records into the REGISTRATION table...");
 	}
 	
 	void insertRecords() throws Exception {

@@ -43,12 +43,12 @@ class H2Exercise {
 	}
 	
 	static void setAutoCommit(Connection conn, String set) throws Exception {
-		H2Exercise.log("Setting auto commit ...");
+		H2Exercise.log("Setting auto commit " + set + "...");
 		
 		Statement stmt = conn.createStatement();
 		stmt.execute("SET AUTOCOMMIT " + set);
 		
-		H2Exercise.log("Setted auto commit ...");
+		H2Exercise.log("Setted auto commit " + set + "...");
 	}
 	
 	static void selectRecords(Connection conn) throws Exception {
@@ -83,7 +83,14 @@ class H2Exercise {
 		H2Exercise.log("committed ...");
 	}
 	
-	public static void log(String msg) {
+	static void executeSql(Connection conn, String sql) throws Exception {
+		H2Exercise.log("Updating dummy records into the REGISTRATION table...");
+		Statement stmt = conn.createStatement();
+		stmt.executeUpdate(sql);
+		H2Exercise.log("Updated dummy records into the REGISTRATION table...");
+	}
+	
+	static void log(String msg) {
 		System.out.println("[" + Thread.currentThread().getId() + "] " + msg);
 	}
 	
