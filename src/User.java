@@ -13,7 +13,7 @@ public class User extends Thread {
 		try {
 			conn = H2Exercise.connectDB(H2Exercise.H2_DRIVER, H2Exercise.DB_URL, USER, PW);
 			while (true) {
-				H2Exercise.selectRecords(conn);
+				H2Exercise.printRecords(conn);
 				Thread.sleep(1000);
 			}
 		} catch (Exception e) {

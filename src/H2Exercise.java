@@ -42,16 +42,7 @@ class H2Exercise {
 		H2Exercise.log("Granted role to user ...");
 	}
 	
-	static void setAutoCommit(Connection conn, String set) throws Exception {
-		H2Exercise.log("Setting auto commit " + set + "...");
-		
-		Statement stmt = conn.createStatement();
-		stmt.execute("SET AUTOCOMMIT " + set);
-		
-		H2Exercise.log("Setted auto commit " + set + "...");
-	}
-	
-	static void selectRecords(Connection conn) throws Exception {
+	static void printRecords(Connection conn) throws Exception {
 		H2Exercise.log("Selecting records ...");
 		
 		Statement stmt = conn.createStatement();
@@ -74,34 +65,15 @@ class H2Exercise {
 	}
 	
 	
-	static void commit(Connection conn) throws Exception {
-		H2Exercise.log("committing ...");
-		
-		Statement stmt = conn.createStatement();
-		stmt.execute("COMMIT");
-	
-		H2Exercise.log("committed ...");
-	}
-	
 	static void executeSql(Connection conn, String sql) throws Exception {
-		H2Exercise.log("Updating dummy records into the REGISTRATION table...");
 		Statement stmt = conn.createStatement();
 		stmt.executeUpdate(sql);
-		H2Exercise.log("Updated dummy records into the REGISTRATION table...");
 	}
 	
 	static void log(String msg) {
 		System.out.println("[" + Thread.currentThread().getId() + "] " + msg);
 	}
 	
-	public H2Exercise() throws Exception {
-		(new Admin()).start();
-		Thread.sleep(2000);
-		synchronized(obj) {
-			(new User()).start();
-		}
-	}
 	public static void main(String ar[]) throws Exception {
-		new H2Exercise();
 	}
 }

@@ -26,7 +26,7 @@ public class Admin extends Thread {
 						"VALUES (1, 'Zara', 'Ali', 18)");
 				stmt.executeUpdate("INSERT INTO Registration " +
 						"VALUES (2, 'Mahnaz', 'Fatma', 25)");
-				H2Exercise.setAutoCommit(conn, "OFF");
+				conn.setAutoCommit(false);
 			}
 			
 			// update age every second and commit every 10 updates
@@ -35,7 +35,7 @@ public class Admin extends Thread {
                 "SET age =" + i + "WHERE id in (1, 2)";
 				H2Exercise.executeSql(conn, sql);
 				if (i % 10 == 0) {
-					H2Exercise.commit(conn);
+					conn.commit();
 				}
 				Thread.sleep(1000);
 			}
