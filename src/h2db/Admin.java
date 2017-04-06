@@ -1,65 +1,53 @@
+package h2db;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import utils.DB;
+import utils.Debug;
 
+public class Admin {
 
-public class Admin extends Thread {
-	
 	static String USER = "sa";
 	static String PW = "";
-	
-	Connection conn = null;
-	Statement stmt = null;
 
-	public void run()  {
+	public static void init()  {
 		try {
-			
 			// initialize database
-			synchronized(H2Exercise.obj) {
-				conn = H2Exercise.connectDB(H2Exercise.H2_DRIVER, H2Exercise.DB_URL, USER, PW);
-				dropTable();
-				createTable();
-				H2Exercise.grantRoleToUser(conn, "REGISTRATION", "SELECT", "danguria");
-				stmt = conn.createStatement();
-				stmt.executeUpdate("INSERT INTO Registration " +
-						"VALUES (1, 'Zara', 'Ali', 18)");
-				stmt.executeUpdate("INSERT INTO Registration " +
-						"VALUES (2, 'Mahnaz', 'Fatma', 25)");
-				conn.setAutoCommit(false);
-			}
+			Connection conn = DB.connectDB(H2DB.DRIVER, H2DB.DB_URL, USER, PW);
+			dropTable(conn);
+			createTable(conn);
+
+			DB.createUser(conn, "writer", "123");
+			DB.createUser(conn, "reader", "123");
+			DB.grantAllOnTableToPublic(conn, "REGISTRATION");
 			
-			// update age every second and commit every 10 updates
-			for (int i = 1; i < Integer.MAX_VALUE; i++) {
-				String sql = "UPDATE Registration " +
-                "SET age =" + i + "WHERE id in (1, 2)";
-				H2Exercise.executeSql(conn, sql);
-				if (i % 10 == 0) {
-					conn.commit();
-				}
-				Thread.sleep(1000);
-			}
-			
-			H2Exercise.disconnectDB(conn);
+			Statement stmt = conn.createStatement();
+			stmt.executeUpdate("INSERT INTO Registration " +
+					"VALUES (1, 'Zara', 'Ali', 18)");
+			stmt.executeUpdate("INSERT INTO Registration " +
+					"VALUES (2, 'Mahnaz', 'Fatma', 25)");
+			conn.setAutoCommit(false);
+			DB.disconnectDB(conn);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	void dropTable() throws Exception {
-		H2Exercise.log("Deleting table in given REGISTRATION...");
-		
-		stmt = conn.createStatement();
+
+	static void dropTable(Connection conn) throws Exception {
+		Debug.log("Deleting table in given REGISTRATION...");
+
+		Statement stmt = conn.createStatement();
 		String sql = "DROP TABLE REGISTRATION IF EXISTS";
 		stmt.executeUpdate(sql);
-		
-		H2Exercise.log("Table  deleted in given REGISTRATION...");
+
+		Debug.log("Table  deleted in given REGISTRATION...");
 	}
-	
-	void createTable() throws Exception {
-		H2Exercise.log("Creating table in given REGISTRATION...");
-		
-		stmt = conn.createStatement();
+
+	static void createTable(Connection conn) throws Exception {
+		Debug.log("Creating table in given REGISTRATION...");
+
+		Statement stmt = conn.createStatement();
 		String sql = "CREATE TABLE REGISTRATION " +
 				"(id INTEGER not NULL, " +
 				" first VARCHAR(255), " + 
@@ -67,18 +55,18 @@ public class Admin extends Thread {
 				" age INTEGER, " + 
 				" PRIMARY KEY ( id ))"; 
 		stmt.executeUpdate(sql);
-		
-		H2Exercise.log("Created table in given REGISTRATION...");	
+
+		Debug.log("Created table in given REGISTRATION...");	
 	}
-	
-	void insertRecords() throws Exception {
-		H2Exercise.log("Inserting records into the REGISTRATION table...");
-		stmt = conn.createStatement();
+
+	static void insertRecords(Connection conn) throws Exception {
+		Debug.log("Inserting records into the REGISTRATION table...");
+		Statement stmt = conn.createStatement();
 
 		String sql = "INSERT INTO Registration " +
 				"VALUES (100, 'Zara', 'Ali', 18)";
 		stmt.executeUpdate(sql);
-		
+
 		sql = "INSERT INTO Registration " +
 				"VALUES (101, 'Mahnaz', 'Fatma', 25)";
 		stmt.executeUpdate(sql);
@@ -88,12 +76,12 @@ public class Admin extends Thread {
 		sql = "INSERT INTO Registration " +
 				"VALUES(103, 'Sumit', 'Mittal', 28)";
 		stmt.executeUpdate(sql);
-		H2Exercise.log("Inserted records into the REGISTRATION table...");
+		Debug.log("Inserted records into the REGISTRATION table...");
 	}
 
-	void updateRecords() throws Exception {
-		H2Exercise.log("Updating records ...");
-		stmt = conn.createStatement();
+	static void updateRecords(Connection conn) throws Exception {
+		Debug.log("Updating records ...");
+		Statement stmt = conn.createStatement();
 		String sql = "UPDATE Registration " +
 				"SET age = 30 WHERE id in (100, 101)";
 		stmt.executeUpdate(sql);
@@ -111,15 +99,15 @@ public class Admin extends Thread {
 			String last = rs.getString("last");
 
 			// Display values
-			H2Exercise.log("ID: " + id + ", Age: " + age
+			Debug.log("ID: " + id + ", Age: " + age
 					+ ", First: " + first + ", Last: " + last);
 		}
 		rs.close();
 	}
-	
-	void deleteRecords() throws Exception {
-		H2Exercise.log("Deleting records...");
-		stmt = conn.createStatement();
+
+	static void deleteRecords(Connection conn) throws Exception {
+		Debug.log("Deleting records...");
+		Statement stmt = conn.createStatement();
 		String sql = "DELETE FROM Registration " +
 				"WHERE id = 101";
 		stmt.executeUpdate(sql);
@@ -137,7 +125,7 @@ public class Admin extends Thread {
 			String last = rs.getString("last");
 
 			// Display values
-			H2Exercise.log("ID: " + id + ", Age: " + age
+			Debug.log("ID: " + id + ", Age: " + age
 					+ ", First: " + first + ", Last: " + last);
 		}
 		rs.close();

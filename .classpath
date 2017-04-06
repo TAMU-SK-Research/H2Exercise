@@ -2,6 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 8 [1.8.0_101]"/>
-	<classpathentry kind="lib" path="/Users/sugnkeunkim/GoogleDrive/projects/h2/bin/h2-1.4.194.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="/Users/sugnkeunkim/Documents/workspace/h2/h2database-version-1.4.185/h2/bin/h2-1.4.185.jar"/>
+	<classpathentry kind="lib" path="/Users/sugnkeunkim/Documents/workspace/h2/hsqldb-2.3.4/hsqldb/lib/hsqldb.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
