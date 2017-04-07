@@ -11,24 +11,30 @@ public class Admin {
 	static String USER = "sa";
 	static String PW = "";
 
-	public static void init()  {
+	public static void init(boolean mvcc)  {
 		try {
+			Debug.log("initializing ...");
 			// initialize database
-			Connection conn = DB.connectDB(H2DB.DRIVER, H2DB.DB_URL, USER, PW);
+			String url = H2DB.DB_URL;
+			if (mvcc) {
+				url += ";MVCC=TRUE";
+			} else {
+				url += ";MVCC=FALSE";
+			}
+			Connection conn = DB.connectDB(H2DB.DRIVER, url, USER, PW);
 			dropTable(conn);
 			createTable(conn);
 
 			DB.createUser(conn, "writer", "123");
 			DB.createUser(conn, "reader", "123");
 			DB.grantAllOnTableToPublic(conn, "REGISTRATION");
-			
-			Statement stmt = conn.createStatement();
-			stmt.executeUpdate("INSERT INTO Registration " +
-					"VALUES (1, 'Zara', 'Ali', 18)");
-			stmt.executeUpdate("INSERT INTO Registration " +
-					"VALUES (2, 'Mahnaz', 'Fatma', 25)");
-			conn.setAutoCommit(false);
+		
+			insertRecords(conn);
+			Debug.log("current table");
+			printAll(conn);
 			DB.disconnectDB(conn);
+			
+			Debug.log("initialized ...");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -64,17 +70,16 @@ public class Admin {
 		Statement stmt = conn.createStatement();
 
 		String sql = "INSERT INTO Registration " +
-				"VALUES (100, 'Zara', 'Ali', 18)";
-		stmt.executeUpdate(sql);
-
-		sql = "INSERT INTO Registration " +
-				"VALUES (101, 'Mahnaz', 'Fatma', 25)";
+				"VALUES (1, 'Zara', 'Ali', 18)";
 		stmt.executeUpdate(sql);
 		sql = "INSERT INTO Registration " +
-				"VALUES (102, 'Zaid', 'Khan', 30)";
+				"VALUES (2, 'Mahnaz', 'Fatma', 25)";
 		stmt.executeUpdate(sql);
 		sql = "INSERT INTO Registration " +
-				"VALUES(103, 'Sumit', 'Mittal', 28)";
+				"VALUES (3, 'Zaid', 'Khan', 30)";
+		stmt.executeUpdate(sql);
+		sql = "INSERT INTO Registration " +
+				"VALUES(4, 'Sumit', 'Mittal', 28)";
 		stmt.executeUpdate(sql);
 		Debug.log("Inserted records into the REGISTRATION table...");
 	}
@@ -105,6 +110,23 @@ public class Admin {
 		rs.close();
 	}
 
+	static void printAll(Connection conn) throws Exception {
+		String sql = "SELECT * FROM Registration";
+		Statement stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(sql);
+
+		while(rs.next()){
+			// Retrieve by column name
+			int id  = rs.getInt("id");
+			int age = rs.getInt("age");
+			String first = rs.getString("first");
+			String last = rs.getString("last");
+
+			// Display values
+			Debug.log("ID: " + id + ", Age: " + age
+					+ ", First: " + first + ", Last: " + last);
+		}
+	}
 	static void deleteRecords(Connection conn) throws Exception {
 		Debug.log("Deleting records...");
 		Statement stmt = conn.createStatement();

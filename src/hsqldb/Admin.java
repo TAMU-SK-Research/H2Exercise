@@ -1,4 +1,6 @@
 package hsqldb;
+import h2db.H2DB;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -14,17 +16,21 @@ public class Admin {
 	public static void init()  {
 		try {
 			// initialize database
+			Debug.log("initializing ...");
 			Connection conn = DB.connectDB(HSQL.DRIVER, HSQL.DB_URL, USER, PW);
 			dropTable(conn);
 			createTable(conn);
+	
+		
+			//DB.createUser(conn, "writer", "123");
+			//DB.createUser(conn, "reader", "123");
+			//DB.grantAllOnTableToPublic(conn, "REGISTRATION");
 
-			Statement stmt = conn.createStatement();
-			stmt.executeUpdate("INSERT INTO Registration " +
-					"VALUES (1, 'Zara', 'Ali', 18)");
-			stmt.executeUpdate("INSERT INTO Registration " +
-					"VALUES (2, 'Mahnaz', 'Fatma', 25)");
-			conn.setAutoCommit(false);
+			insertRecords(conn);
+			Debug.log("current table is");
+			printAll(conn);
 			DB.disconnectDB(conn);
+			Debug.log("initialized ...");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -127,4 +133,21 @@ public class Admin {
 		rs.close();
 	}
 
+	static void printAll(Connection conn) throws Exception {
+		String sql = "SELECT * FROM Registration";
+		Statement stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(sql);
+
+		while(rs.next()){
+			// Retrieve by column name
+			int id  = rs.getInt("id");
+			int age = rs.getInt("age");
+			String first = rs.getString("first");
+			String last = rs.getString("last");
+
+			// Display values
+			Debug.log("ID: " + id + ", Age: " + age
+					+ ", First: " + first + ", Last: " + last);
+		}
+	}
 }
