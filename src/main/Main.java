@@ -54,7 +54,7 @@ public class Main {
 
 		/* PhantomReads for H2DB
 		*/
-		//(new h2db.PhantomReads(true, Connection.TRANSACTION_SERIALIZABLE)).start();
+		(new h2db.PhantomReads(true, Connection.TRANSACTION_SERIALIZABLE)).start();
 		//(new h2db.PhantomReads(true, Connection.TRANSACTION_READ_COMMITTED)).start();
 		//(new h2db.PhantomReads(true, Connection.TRANSACTION_READ_UNCOMMITTED)).start();
 		
