@@ -4,12 +4,12 @@ import java.sql.Connection;
 
 public class Main {
 	public static Object obj = new Object();
-	public static void main(String ar[]) throws Exception {
-		/* WhatIsMVCC
-		h2db.Admin.init();
-		new h2db.WhatIsMVCC();
-		 */
-
+	static void whatIsMVCC() {
+		//h2db.Admin.init();
+		//new h2db.WhatIsMVCC();
+	}
+	
+	static void testTransactionIsolation() {
 		/* DirtyReads for H2DB
 		 */
 		//new h2db.DirtyReads(true, Connection.TRANSACTION_SERIALIZABLE).run();
@@ -71,6 +71,11 @@ public class Main {
 		//(new hsqldb.PhantomReads(false, Connection.TRANSACTION_SERIALIZABLE)).start();
 		//(new hsqldb.PhantomReads(false, Connection.TRANSACTION_READ_COMMITTED)).start();
 		//(new hsqldb.PhantomReads(false, Connection.TRANSACTION_READ_UNCOMMITTED)).start();
-
+		
+	}
+	
+	public static void main(String ar[]) throws Exception {
+		//whatIsMVCC();
+		//testTransactionIsolation();
 	}
 }
