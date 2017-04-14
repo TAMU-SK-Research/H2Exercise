@@ -1,5 +1,7 @@
 package main;
 
+import h2db.Issue180;
+
 import java.sql.Connection;
 
 public class Main {
@@ -77,5 +79,6 @@ public class Main {
 	public static void main(String ar[]) throws Exception {
 		//whatIsMVCC();
 		//testTransactionIsolation();
+		new Issue180();
 	}
 }
