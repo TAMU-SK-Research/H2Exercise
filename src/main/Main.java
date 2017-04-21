@@ -1,6 +1,8 @@
 package main;
 
 import h2db.Issue180;
+import h2db.MiscTest;
+import h2db.SyncAndExceptionTest;
 
 import java.sql.Connection;
 
@@ -80,5 +82,7 @@ public class Main {
 		//whatIsMVCC();
 		//testTransactionIsolation();
 		new Issue180();
+		//new MiscTest();
+		//new SyncAndExceptionTest();
 	}
 }
